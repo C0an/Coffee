@@ -1,3 +1,4 @@
 name: Coffee
-version: 0.1-SNAPSHOT
 main: cc.ryaan.coffee.bukkit.Coffee
+version: 0.1-SNAPSHOT
+author: C0an

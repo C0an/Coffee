@@ -1,0 +1,14 @@
+mongo:
+  host: 127.0.0.1
+  port: 27017
+  username: username
+  password: password
+  authDatabase: admin
+  database: Coffee
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  database: 0
+  password: ""
+  channel: coffee-comms

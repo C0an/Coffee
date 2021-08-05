@@ -1,27 +1,54 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <parent>
-        <artifactId>coffee-parent</artifactId>
         <groupId>cc.ryaan.coffee</groupId>
+        <artifactId>coffee-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
     <artifactId>bukkit</artifactId>
-    <name>Coffee</name>
-    <version>0.1</version>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <repositories>
+        <repository>
+            <id>depends</id>
+            <url>https://maven.protocol.rip/repository/depends/</url>
+            <layout>default</layout>
+        </repository>
+
+        <repository>
+            <id>protocol</id>
+            <url>https://maven.protocol.rip/repository/protocol/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
 
     <dependencies>
+        <!-- Server Jar -->
+        <dependency>
+            <groupId>net.hylist</groupId>
+            <artifactId>spigot</artifactId>
+            <version>LATEST</version>
+            <scope>provided</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>cc.ryaan.coffee</groupId>
+            <artifactId>main</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>cc.ryaan.coffee</groupId>
+            <artifactId>main</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
-        <finalName>${project.name}</finalName>
+        <finalName>${project.name}-${project.version}</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
@@ -76,7 +103,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.16.16</version>
+                            <version>1.18.18</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -100,15 +127,6 @@
                 </executions>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
     </build>
-
 
 </project>
