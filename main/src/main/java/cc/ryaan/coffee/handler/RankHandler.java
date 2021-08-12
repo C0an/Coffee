@@ -4,21 +4,24 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import lombok.Getter;
 import org.bson.Document;
 import cc.ryaan.coffee.Coffee;
 import cc.ryaan.coffee.rank.Rank;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 @Getter
 public class RankHandler {
 
-    public final Coffee coffee;
-    public final MongoCollection<Document> rankCollection;
-    public final Set<Rank> ranks = new HashSet<>();
+    private final Coffee coffee;
+    private final MongoCollection<Document> rankCollection;
+    private final Set<Rank> ranks = new HashSet<>();
 
     public RankHandler(Coffee coffee, MongoCollection<Document> rankCollection) {
         this.coffee = coffee;
@@ -26,28 +29,53 @@ public class RankHandler {
     }
 
     public void init() {
-        ranks.clear();
+        synchronized (ranks) {
+            ranks.clear();
 
-        getRanksInDatabase(callback -> {
-            coffee.getLoggerPopulator().printLog("§aFound " + callback.size() + " ranks in database.");
-            List<Rank> rankList = new ArrayList<>();
-            AtomicInteger done = new AtomicInteger();
+            try {
+                List<Document> documents = getRankDocumentsFromDB().join();
+                if (documents == null) throw new IllegalStateException("No ranks were returned");
 
-            for (UUID uuid : callback) {
-                loadRank(uuid, rankConsumer -> {
-                    rankList.add(rankConsumer);
-                    done.getAndIncrement();
-                }, false);
+                for (Document document : documents) {
+                    UUID uuid = UUID.fromString(document.getString("uuid"));
+
+                    Rank rank = getRank(uuid);
+                    if (rank == null)
+                        rank = loadRank(document);
+
+                    if (rank == null)
+                        throw new IllegalStateException("Failed to load rank data for rank '" + document.getString("name") + "'");
+
+                    ranks.add(rank);
+                }
+
+                coffee.getLoggerPopulator().printLog("Successfully imported " + ranks.size() + " ranks from the database.");
+
+                if (getDefaultRank() == null) {
+                    ranks.add(Rank.builder().uuid(UUID.randomUUID()).name("Default").displayName("Default").displayPriority(0).orderPriority(0).hidden(false).colour("§a").defaultRank(true).build());
+                    coffee.getLoggerPopulator().printLog("No default rank was found, it has been created.");
+                }
+            } catch (Exception ex) {
+                coffee.getLoggerPopulator().printLog("Failed to load ranks from the database.");
+                ex.printStackTrace();
             }
-
-            ranks.addAll(rankList);
-        });
+        }
     }
 
-    public void getRanksInDatabase(Consumer<Set<UUID>> consumer) {
-        Set<UUID> uuidSet = new HashSet<>();
-        for (Document document : this.rankCollection.find()) uuidSet.add(UUID.fromString(document.getString("uuid")));
-        consumer.accept(uuidSet);
+    public CompletableFuture<List<Document>> getRankDocumentsFromDB() {
+        CompletableFuture<List<Document>> future = new CompletableFuture<>();
+
+        new Thread(() -> {
+            try {
+                List<Document> documents = new ArrayList<>();
+                this.rankCollection.find().forEach((Consumer<Document>) documents::add);
+                future.complete(documents);
+            } catch (Exception ex) {
+                future.completeExceptionally(ex);
+            }
+        }).start();
+
+        return future;
     }
 
     public void loadRank(UUID uuid, Consumer<Rank> rankConsumer, boolean async) {
@@ -59,6 +87,7 @@ public class RankHandler {
             rankConsumer.accept(getRank(uuid));
             return;
         }
+
         Document document = this.rankCollection.find(Filters.eq("uuid", uuid.toString())).first();
 
         if (document == null) {
@@ -66,7 +95,16 @@ public class RankHandler {
             return;
         }
 
-        rankConsumer.accept(new Rank(document));
+        rankConsumer.accept(loadRank(document));
+    }
+
+    public Rank loadRank(Document document) {
+        return coffee.
+                getGson().
+                fromJson(
+                        document.
+                                toJson(),
+                        Rank.class);
     }
 
     public void saveRank(Rank rank, boolean async) {
@@ -75,18 +113,9 @@ public class RankHandler {
             return;
         }
 
-        Document document = new Document()
-                .append("uuid", rank.getUuid().toString())
-                .append("name", rank.getName())
-                .append("displayName", rank.getDisplayName())
-                .append("color", rank.getColor())
-                .append("prefix", rank.getPrefix())
-                .append("suffix", rank.getSuffix())
-                .append("displayPriority", rank.getDisplayPriority())
-                .append("orderPriority", rank.getOrderPriority())
-                .append("permissions", new Gson().toJson(rank.getPermissions()));
-
-        this.rankCollection.replaceOne(Filters.eq("uuid", rank.getUuid().toString()), document, new ReplaceOptions().upsert(true));
+        Document document = Document.parse(coffee.getGson().toJson(rank));
+        UpdateResult updateResult = this.rankCollection.replaceOne(Filters.eq("uuid", rank.getUuid().toString()), document, new ReplaceOptions().upsert(true));
+        coffee.getLoggerPopulator().printLog(updateResult.wasAcknowledged() ? "Successfully saved the rank: " + rank.getDisplayName() : "Failed to save the rank: " + rank.getDisplayName());
     }
 
     public void deleteRank(UUID id, boolean async) {
@@ -97,12 +126,20 @@ public class RankHandler {
         Rank rank = getRank(id);
         if (rank == null) return;
 
-        this.rankCollection.deleteOne(Filters.eq("uuid", rank.getUuid().toString()));
+        DeleteResult deleteResult = this.rankCollection.deleteOne(Filters.eq("uuid", rank.getUuid().toString()));
         this.getRanks().remove(rank);
+        coffee.getLoggerPopulator().printLog(deleteResult.wasAcknowledged() ? "Successfully deleted the rank: " + rank.getDisplayName() : "Failed to delete the rank: " + rank.getDisplayName());
+
     }
 
     public void deleteRank(Rank rank, boolean async) {
         deleteRank(rank.getUuid(), async);
+    }
+
+    public Rank getDefaultRank() {
+        synchronized (ranks) {
+            return ranks.stream().filter(Rank::isDefaultRank).findFirst().orElse(null);
+        }
     }
 
     public Rank getRank(UUID uuid) {

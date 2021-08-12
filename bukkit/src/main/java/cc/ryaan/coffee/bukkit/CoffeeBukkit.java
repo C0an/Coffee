@@ -7,6 +7,7 @@ import cc.ryaan.coffee.bukkit.populator.CoffeeBukkitPopulator;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import rip.protocol.plib.command.FrozenCommandHandler;
 
 import java.util.Arrays;
 
@@ -20,10 +21,12 @@ public class CoffeeBukkit extends JavaPlugin {
         (instance = this).saveDefaultConfig();
         coffee = new Coffee(new CoffeeBukkitPopulator(), new CoffeeBukkitLoggerPopulator());
         Arrays.asList(new CoffeeListener()).forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
+        FrozenCommandHandler.registerAll(this);
     }
 
     @Override
     public void onDisable() {
+        coffee.shutdown();
         instance = null;
     }
 

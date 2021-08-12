@@ -70,6 +70,11 @@ public class CoffeeHandler {
             }
             return null;
         }
+
+        @Override
+        public void shutdown() {
+
+        }
     }
 
 }

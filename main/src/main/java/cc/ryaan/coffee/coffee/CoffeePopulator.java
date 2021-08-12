@@ -17,6 +17,8 @@ public abstract class CoffeePopulator {
     public abstract JedisPool getJedisPool();
     public abstract MongoClient getMongoDB();
 
+    public abstract void shutdown();
+
     @ConstructorProperties(value={"name", "weight"})
     public CoffeePopulator(String name, int weight) {
         this.name = name;

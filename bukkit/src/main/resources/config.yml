@@ -1,14 +1,19 @@
 mongo:
   host: 127.0.0.1
   port: 27017
-  username: username
-  password: password
-  authDatabase: admin
   database: Coffee
+  timeout: 3000
+  auth:
+    enabled: false
+    username: ""
+    password: ""
+    authDatabase: ""
 
 redis:
   host: 127.0.0.1
   port: 6379
   database: 0
-  password: ""
   channel: coffee-comms
+  auth:
+    enabled: false
+    password: ""

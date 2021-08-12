@@ -10,6 +10,7 @@ public class JedisBuilder {
 
     private String host = "127.0.0.1", password = "";
     private int port = 6379, dbID = 0, timeout = 3000;
+    private boolean authorization;
 
     public static JedisBuilder getBuilder() {
         return new JedisBuilder();
@@ -40,7 +41,17 @@ public class JedisBuilder {
         return this;
     }
 
+    public JedisBuilder setAuthorization(boolean authorization) {
+        this.authorization = authorization;
+        return this;
+    }
+
     public JedisPool build() {
-        return new JedisPool(new JedisPoolConfig(), getHost(), getPort(), getTimeout(), getPassword(), getDbID());
+        if(authorization) return new JedisPool(new JedisPoolConfig(), getHost(), getPort(), getTimeout(), getPassword(), getDbID());
+        else {
+            JedisPool jedisPool = new JedisPool(new JedisPoolConfig(), getHost(), getPort(), getTimeout());
+            jedisPool.getResource().select(getDbID());
+            return jedisPool;
+        }
     }
 }

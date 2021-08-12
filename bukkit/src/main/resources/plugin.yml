@@ -1,4 +1,6 @@
 name: Coffee
-main: cc.ryaan.coffee.bukkit.Coffee
+main: cc.ryaan.coffee.bukkit.CoffeeBukkit
 version: 0.1-SNAPSHOT
 author: C0an
+depend:
+  - qLib

@@ -41,6 +41,6 @@ public class MongoBuilder {
     }
 
     public MongoClient build() {
-        return new MongoClient(new MongoClientURI("mongodb://" + (getPassword().equals("") ? "" : getUsername() + ":" + getPassword() + "@") + getHost() + ":" + getPort() + (getAuthDatabase().equals("") ? "" : "/" + getAuthDatabase())));
+        return new MongoClient(new MongoClientURI("mongodb://" + (getUsername() != null && !getUsername().equals("") ? (getPassword().equals("") ? "" : getUsername() + ":" + getPassword() + "@") : "") + getHost() + ":" + getPort() + (getAuthDatabase().equals("") ? "" : "/" + getAuthDatabase())));
     }
 }
