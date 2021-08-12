@@ -55,7 +55,7 @@ public class RankHandler {
                 coffee.getLoggerPopulator().printLog("Successfully imported " + ranks.size() + " ranks from the database.");
 
                 if (getDefaultRank() == null) {
-                    ranks.add(Rank.builder().uuid(UUID.randomUUID()).name("Default").displayName("Default").priority(0).hidden(false).colour("§a").defaultRank(true).build());
+                    ranks.add(Rank.builder().uuid(UUID.randomUUID()).name("Default").displayName("Default").priority(0).hidden(false).colour("§a").prefix("§a").suffix("§a").permissions(new HashMap<>()).defaultRank(true).build());
                     coffee.getLoggerPopulator().printLog("No default rank was found, it has been created.");
                 }
             } catch (Exception ex) {

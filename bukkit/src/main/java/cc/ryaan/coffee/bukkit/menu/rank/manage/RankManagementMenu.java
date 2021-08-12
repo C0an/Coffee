@@ -5,7 +5,6 @@ import cc.ryaan.coffee.bukkit.menu.rank.manage.button.CreateRankButton;
 import cc.ryaan.coffee.bukkit.menu.rank.manage.button.RankButton;
 import org.bukkit.entity.Player;
 import rip.protocol.plib.menu.Button;
-import rip.protocol.plib.menu.Menu;
 import rip.protocol.plib.menu.pagination.PaginatedMenu;
 
 import java.util.HashMap;
@@ -28,7 +27,7 @@ public class RankManagementMenu extends PaginatedMenu {
     @Override
     public Map<Integer, Button> getGlobalButtons(Player player) {
         Map<Integer, Button> buttonMap = new HashMap<>();
-        buttonMap.put(4, new CreateRankButton());
+        buttonMap.put(4, new CreateRankButton(player));
         return buttonMap;
     }
 }
