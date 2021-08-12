@@ -2,6 +2,7 @@ package cc.ryaan.coffee.bukkit.menu.rank.manage.button;
 
 import cc.ryaan.coffee.bukkit.CoffeeBukkitPlugin;
 import cc.ryaan.coffee.bukkit.menu.rank.edit.RankEditMenu;
+import cc.ryaan.coffee.bukkit.prompt.rank.*;
 import cc.ryaan.coffee.rank.Rank;
 import lombok.AllArgsConstructor;
 import org.bukkit.ChatColor;
@@ -49,110 +50,14 @@ public class CreateRankButton extends Button {
     }
 
     private void startConversation( Player player ) {
-        factory.withFirstPrompt(new NamePrompt()).withPrefix(new NullConversationPrefix())
+        factory.withFirstPrompt(
+                new RankNamePrompt(player, null,
+                new RankDisplayNamePrompt(player, null,
+                new RankPriorityPrompt(player, null,
+                new RankColourPrompt(player, null,
+                new RankPrefixPrompt(player, null, new Done())))))).withPrefix(new NullConversationPrefix())
                 .withLocalEcho(false).withEscapeSequence("cancel").buildConversation( player )
                 .begin();
-    }
-
-
-    public class NamePrompt extends ValidatingPrompt {
-
-        @Override
-        public String getPromptText( ConversationContext context ) {
-            return ChatColor.YELLOW + "Please type a name for the rank, or type " + ChatColor.RED + "cancel" + ChatColor.YELLOW + " to cancel.";
-        }
-
-        @Override
-        protected boolean isInputValid( ConversationContext context, String input ) {
-            return !input.contains(" ");
-        }
-
-        @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, String input ) {
-            context.setSessionData( "name", input );
-            return new DisplayNamePrompt();
-        }
-    }
-
-    public class DisplayNamePrompt extends ValidatingPrompt {
-
-        @Override
-        public String getPromptText( ConversationContext context ) {
-            return ChatColor.YELLOW + "Please type a display name for the rank, or type " + ChatColor.RED + "cancel" + ChatColor.YELLOW + " to cancel.";
-        }
-
-        @Override
-        protected boolean isInputValid( ConversationContext context, String input ) {
-            return true;
-        }
-
-        @Override
-        protected Prompt acceptValidatedInput( ConversationContext context, String input ) {
-            context.setSessionData( "displayName", input );
-            return new PriorityPrompt();
-        }
-    }
-
-    public class PriorityPrompt extends ValidatingPrompt {
-
-        @Override
-        public String getPromptText( ConversationContext context ) {
-            return ChatColor.YELLOW + "Please type a priority for the rank, or type " + ChatColor.RED + "cancel" + ChatColor.YELLOW + " to cancel.";
-        }
-
-        @Override
-        protected boolean isInputValid( ConversationContext context, String input ) {
-            try {
-                Integer.parseInt(input);
-                return true;
-            }catch (Exception e) {
-                return false;
-            }
-        }
-
-        @Override
-        protected Prompt acceptValidatedInput( ConversationContext context, String input ) {
-            context.setSessionData( "priority", input );
-            return new ColourPrompt();
-        }
-    }
-
-    public class ColourPrompt extends ValidatingPrompt {
-
-        @Override
-        public String getPromptText( ConversationContext context ) {
-            return ChatColor.YELLOW + "Please type a colour for the rank, (Use & to Colour) or type " + ChatColor.RED + "cancel" + ChatColor.YELLOW + " to cancel.";
-        }
-
-        @Override
-        protected boolean isInputValid( ConversationContext context, String input ) {
-            return true;
-        }
-
-        @Override
-        protected Prompt acceptValidatedInput( ConversationContext context, String input ) {
-            context.setSessionData( "colour", ChatColor.translateAlternateColorCodes('&', input) );
-            return new PrefixPrompt();
-        }
-    }
-
-    public class PrefixPrompt extends ValidatingPrompt {
-
-        @Override
-        public String getPromptText( ConversationContext context ) {
-            return ChatColor.YELLOW + "Please type a prefix for the rank, (Use & to Colour) or type " + ChatColor.RED + "cancel" + ChatColor.YELLOW + " to cancel.";
-        }
-
-        @Override
-        protected boolean isInputValid( ConversationContext context, String input ) {
-            return true;
-        }
-
-        @Override
-        protected Prompt acceptValidatedInput( ConversationContext context, String input ) {
-            context.setSessionData( "prefix", ChatColor.translateAlternateColorCodes('&', input) );
-            return new Done();
-        }
     }
 
     public class Done implements Prompt {

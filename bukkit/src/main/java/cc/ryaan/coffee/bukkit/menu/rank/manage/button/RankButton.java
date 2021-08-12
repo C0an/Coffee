@@ -1,11 +1,13 @@
 package cc.ryaan.coffee.bukkit.menu.rank.manage.button;
 
+import cc.ryaan.coffee.bukkit.menu.rank.edit.RankEditMenu;
 import cc.ryaan.coffee.rank.Rank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import rip.protocol.plib.menu.Button;
 
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor @Getter
 public class RankButton extends Button {
 
-    private Rank rank;
+    private final Rank rank;
 
     @Override
     public String getName(Player player) {
@@ -40,4 +42,9 @@ public class RankButton extends Button {
         return Material.PAPER;
     }
 
+    @Override
+    public void clicked(Player player, int slot, ClickType clickType) {
+        player.closeInventory();
+        new RankEditMenu(rank).openMenu(player);
+    }
 }
