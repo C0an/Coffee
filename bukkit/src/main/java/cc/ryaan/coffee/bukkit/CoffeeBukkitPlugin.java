@@ -1,6 +1,7 @@
 package cc.ryaan.coffee.bukkit;
 
 import cc.ryaan.coffee.Coffee;
+import cc.ryaan.coffee.bukkit.core.CoffeeBukkit;
 import cc.ryaan.coffee.bukkit.listener.CoffeeListener;
 import cc.ryaan.coffee.bukkit.populator.CoffeeBukkitLoggerPopulator;
 import cc.ryaan.coffee.bukkit.populator.CoffeeBukkitPopulator;
@@ -11,22 +12,22 @@ import rip.protocol.plib.command.FrozenCommandHandler;
 
 import java.util.Arrays;
 
-public class CoffeeBukkit extends JavaPlugin {
+public class CoffeeBukkitPlugin extends JavaPlugin {
 
-    @Getter private static CoffeeBukkit instance;
-    @Getter private Coffee coffee;
+    @Getter private static CoffeeBukkitPlugin instance;
+    @Getter private CoffeeBukkit coffeeBukkit;
 
     @Override
     public void onEnable() {
         (instance = this).saveDefaultConfig();
-        coffee = new Coffee(new CoffeeBukkitPopulator(), new CoffeeBukkitLoggerPopulator());
+        coffeeBukkit = new CoffeeBukkit(new CoffeeBukkitPopulator(), new CoffeeBukkitLoggerPopulator());
         Arrays.asList(new CoffeeListener()).forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
         FrozenCommandHandler.registerAll(this);
     }
 
     @Override
     public void onDisable() {
-        coffee.shutdown();
+        coffeeBukkit.shutdown();
         instance = null;
     }
 

@@ -18,7 +18,7 @@ public class Rank {
 
     private UUID uuid;
     private String name, displayName, colour = "§a", prefix = "§a", suffix = "§a";
-    private int displayPriority = 0, orderPriority = 0;
+    private int priority = 0;
     private boolean defaultRank, hidden;
     // Here we do a Class as we have ServerGroup and Server[String] specific permissions.
     private Map<Object, String> permissions = new HashMap<>();

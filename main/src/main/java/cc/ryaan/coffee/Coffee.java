@@ -9,7 +9,7 @@ import lombok.Getter;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 @Getter
-public class Coffee {
+public abstract class Coffee {
 
     private final CoffeePopulator coffeePopulator;
     private final LoggerPopulator loggerPopulator;
@@ -50,7 +50,8 @@ public class Coffee {
         this.mongoHandler = new MongoHandler(this);
         this.serverHandler = new ServerHandler(this);
         (this.rankHandler = new RankHandler(this, mongoHandler.getRankCollection())).init();
-        loggerPopulator.printLog("We're ready for requests!");
+
+        loggerPopulator.printLog("Prepared base!");
     }
 
     public void shutdown() {

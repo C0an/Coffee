@@ -1,5 +1,6 @@
 package cc.ryaan.coffee.handler;
 
+import cc.ryaan.coffee.profile.obj.Grant;
 import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -22,6 +23,7 @@ public class RankHandler {
     private final Coffee coffee;
     private final MongoCollection<Document> rankCollection;
     private final Set<Rank> ranks = new HashSet<>();
+    private Grant defaultGrant;
 
     public RankHandler(Coffee coffee, MongoCollection<Document> rankCollection) {
         this.coffee = coffee;
@@ -47,12 +49,13 @@ public class RankHandler {
                         throw new IllegalStateException("Failed to load rank data for rank '" + document.getString("name") + "'");
 
                     ranks.add(rank);
+                    System.out.println(ranks);
                 }
 
                 coffee.getLoggerPopulator().printLog("Successfully imported " + ranks.size() + " ranks from the database.");
 
                 if (getDefaultRank() == null) {
-                    ranks.add(Rank.builder().uuid(UUID.randomUUID()).name("Default").displayName("Default").displayPriority(0).orderPriority(0).hidden(false).colour("§a").defaultRank(true).build());
+                    ranks.add(Rank.builder().uuid(UUID.randomUUID()).name("Default").displayName("Default").priority(0).hidden(false).colour("§a").defaultRank(true).build());
                     coffee.getLoggerPopulator().printLog("No default rank was found, it has been created.");
                 }
             } catch (Exception ex) {
@@ -60,6 +63,7 @@ public class RankHandler {
                 ex.printStackTrace();
             }
         }
+        defaultGrant = new Grant(getDefaultRank().getUuid(), Long.MAX_VALUE, Collections.singletonList("GLOBAL"), "", "N/A", "Coffee");
     }
 
     public CompletableFuture<List<Document>> getRankDocumentsFromDB() {
@@ -83,10 +87,6 @@ public class RankHandler {
             new Thread(() -> loadRank(uuid, rankConsumer, false)).start();
             return;
         }
-        if(getRank(uuid) != null) {
-            rankConsumer.accept(getRank(uuid));
-            return;
-        }
 
         Document document = this.rankCollection.find(Filters.eq("uuid", uuid.toString())).first();
 
@@ -99,12 +99,7 @@ public class RankHandler {
     }
 
     public Rank loadRank(Document document) {
-        return coffee.
-                getGson().
-                fromJson(
-                        document.
-                                toJson(),
-                        Rank.class);
+        return coffee.getGson().fromJson(document.toJson(), Rank.class);
     }
 
     public void saveRank(Rank rank, boolean async) {
@@ -138,7 +133,7 @@ public class RankHandler {
 
     public Rank getDefaultRank() {
         synchronized (ranks) {
-            return ranks.stream().filter(Rank::isDefaultRank).findFirst().orElse(null);
+            return ranks.stream().filter(Rank::isDefaultRank).findAny().orElse(null);
         }
     }
 

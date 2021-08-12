@@ -1,30 +1,27 @@
-package cc.ryaan.coffee.profile.grant;
+package cc.ryaan.coffee.profile.obj;
 
-import cc.ryaan.coffee.rank.Rank;
 import cc.ryaan.coffee.util.TimeUtil;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Getter
+@Getter @Builder
 public class Grant {
 
     private final UUID uuid;
-    private final Rank rank;
+    private final UUID rank;
     private final long length, initialTime;
-    private final List<Object> scope;
+    private final List<String> scope;
     private final String reason, grantedBy, grantedOn;
 
     @Setter private boolean removed;
     @Setter private long removedAt;
     @Setter private String removedReason, removedBy, removedOn;
 
-    public Grant(Rank rank, long length, List<Object> scope, String reason, String grantedBy, String grantedOn) {
+    public Grant(UUID rank, long length, List<String> scope, String reason, String grantedBy, String grantedOn) {
         this.uuid = UUID.randomUUID();
         this.rank = rank;
         this.scope = scope;
@@ -40,7 +37,7 @@ public class Grant {
         this.removedReason = "";
     }
 
-    public Grant(UUID uuid, Rank rank, long length, long initialTime, List<Object> scope, String reason, String grantedBy, String grantedOn) {
+    public Grant(UUID uuid, UUID rank, long length, long initialTime, List<String> scope, String reason, String grantedBy, String grantedOn) {
         this.uuid = uuid;
         this.rank = rank;
         this.length = length;
@@ -51,7 +48,7 @@ public class Grant {
         this.grantedOn = grantedOn;
     }
 
-    public Grant(UUID uuid, Rank rank, long length, long initialTime, List<Object> scope, String reason, String grantedBy, String grantedOn, boolean removed, long removedAt, String removedReason, String removedBy, String removedOn) {
+    public Grant(UUID uuid, UUID rank, long length, long initialTime, List<String> scope, String reason, String grantedBy, String grantedOn, boolean removed, long removedAt, String removedReason, String removedBy, String removedOn) {
         this.uuid = uuid;
         this.rank = rank;
         this.length = length;

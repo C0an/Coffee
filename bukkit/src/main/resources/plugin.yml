@@ -1,5 +1,5 @@
 name: Coffee
-main: cc.ryaan.coffee.bukkit.CoffeeBukkit
+main: cc.ryaan.coffee.bukkit.CoffeeBukkitPlugin
 version: 0.1-SNAPSHOT
 author: C0an
 depend:
