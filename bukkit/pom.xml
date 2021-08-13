@@ -42,7 +42,7 @@
 
         <dependency>
             <groupId>cc.ryaan.coffee</groupId>
-            <artifactId>main</artifactId>
+            <artifactId>core</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

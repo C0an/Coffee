@@ -25,10 +25,11 @@ public class ProfileBukkit extends Profile {
     public List<Grant> getActiveGrants() {
         List<Grant> active = new ArrayList<>();
 
-        if (getGrants() == null) // Fix console NPE
+        if (getGrants() == null || getGrants().isEmpty()) // Fix console NPE
             return active;
 
-        getGrants().removeIf(grant -> grant.getRank() == null || CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRank(getRankFromGrant(grant).getUuid()) == null);
+        getGrants().removeIf(grant -> grant.getRank() == null || getRankFromGrant(grant) == null || CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRank(getRankFromGrant(grant).getUuid()) == null);
+
         for (Grant grant : getGrants()) {
 
             if(grant.isStillActive() && isGrantActiveOnScope(grant)) {
