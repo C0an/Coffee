@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@AllArgsConstructor @Data @Builder
+@AllArgsConstructor @Data
 public class Rank {
 
     private UUID uuid;
     private String name, displayName, colour = "§a", prefix = "§a", suffix = "§a";
     private int priority = 0;
-    private boolean defaultRank, hidden;
+    private boolean defaultRank, staff, hidden;
     // Here we do a Class as we have ServerGroup and Server[String] specific permissions.
     private Map<Object, String> permissions = new HashMap<>();
 
@@ -29,6 +29,7 @@ public class Rank {
         this.displayName = name;
         this.defaultRank = false;
         this.hidden = true;
+        this.staff = false;
     }
 
     public String getColouredName() {

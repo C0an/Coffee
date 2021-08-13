@@ -1,5 +1,6 @@
 package cc.ryaan.coffee.bukkit.prompt.rank;
 
+import cc.ryaan.coffee.bukkit.CoffeeBukkitPlugin;
 import cc.ryaan.coffee.rank.Rank;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -43,6 +44,7 @@ public class RankDisplayNamePrompt extends ValidatingPrompt {
     protected Prompt acceptValidatedInput(ConversationContext context, String input ) {
         if(nextPrompt == null) {
             rank.setDisplayName(input);
+            CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
             if(openMenu != null) openMenu.openMenu(executor);
             return END_OF_CONVERSATION;
         }else {

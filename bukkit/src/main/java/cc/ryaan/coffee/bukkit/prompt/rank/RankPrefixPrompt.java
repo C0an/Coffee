@@ -1,5 +1,6 @@
 package cc.ryaan.coffee.bukkit.prompt.rank;
 
+import cc.ryaan.coffee.bukkit.CoffeeBukkitPlugin;
 import cc.ryaan.coffee.rank.Rank;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -36,13 +37,14 @@ public class RankPrefixPrompt extends ValidatingPrompt {
 
     @Override
     protected boolean isInputValid( ConversationContext context, String input ) {
-        return !input.contains(" ");
+        return true;
     }
 
     @Override
     protected Prompt acceptValidatedInput(ConversationContext context, String input ) {
         if(nextPrompt == null) {
             rank.setPrefix(ChatColor.translateAlternateColorCodes('&', input));
+            CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
             if(openMenu != null) openMenu.openMenu(executor);
             return END_OF_CONVERSATION;
         }else {

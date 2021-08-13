@@ -45,7 +45,7 @@ public class CoffeeListener implements Listener {
         profile.setLastJoined(System.currentTimeMillis());
         profile.setUsername(player.getName());
 
-        CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getProfileHandler().saveProfile(profile, cbk -> player.sendMessage(ChatColor.GREEN + "Saved State: " + cbk), true);
+        CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getProfileHandler().saveProfile(profile, ignored -> {}, true);
     }
 
     @EventHandler
@@ -54,7 +54,7 @@ public class CoffeeListener implements Listener {
         if (profile != null) {
             profile.setLastQuit(System.currentTimeMillis());
             profile.setConnectedServer(Bukkit.getServerName());
-            CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getProfileHandler().saveProfile(profile, cbk -> Bukkit.broadcastMessage(ChatColor.GREEN + "Saved State: " + cbk), true);
+            CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getProfileHandler().saveProfile(profile, ignored -> {}, true);
             CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getProfileHandler().getProfiles().remove(event.getPlayer().getUniqueId());
         }
     }
