@@ -26,7 +26,10 @@ public class RankManagementMenu extends PaginatedMenu {
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttonMap = new HashMap<>();
-        CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRanks().stream().sorted(Comparator.comparingInt(Rank::getPriority).reversed()).forEach(rank -> buttonMap.put(buttonMap.size(), new RankButton(rank)));
+        CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRanks().stream()
+                .sorted(Comparator.comparingInt(Rank::getPriority)
+                        .reversed())
+                .forEach(rank -> buttonMap.put(buttonMap.size(), new RankButton(rank)));
         return buttonMap;
     }
 

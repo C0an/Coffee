@@ -45,7 +45,12 @@ public class ListCommand {
 
     private static String getHeader(CommandSender sender) {
         StringBuilder builder = new StringBuilder();
-        List<Rank> ranks = CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRanks().stream().sorted(Comparator.comparingInt(Rank::getPriority).reversed()).collect(Collectors.toList());
+        List<Rank> ranks = CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().
+                getRankHandler().getRanks()
+                .stream()
+                .sorted(Comparator.comparingInt(Rank::getPriority).reversed())
+                .collect(Collectors.toList());
+
         for (Rank rank : ranks) {
             boolean displayed = rank.getPriority() >= 0;
             if (displayed) {

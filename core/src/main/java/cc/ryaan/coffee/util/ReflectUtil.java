@@ -47,7 +47,7 @@ public class ReflectUtil {
         if (constructor == null) throw new RuntimeException("No such constructor");
         constructor.setAccessible(true);
         try {
-            return (T) constructor.newInstance(paramaters);
+            return constructor.newInstance(paramaters);
         } catch (InvocationTargetException ex) {
             throw new RuntimeException(ex.getCause());
         } catch (Exception ex) {

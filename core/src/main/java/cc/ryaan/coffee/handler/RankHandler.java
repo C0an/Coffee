@@ -153,7 +153,9 @@ public class RankHandler {
 
         Document document = Document.parse(coffee.getGson().toJson(rank));
         UpdateResult updateResult = this.rankCollection.replaceOne(Filters.eq("uuid", rank.getUuid().toString()), document, new ReplaceOptions().upsert(true));
-        coffee.getLoggerPopulator().printLog(updateResult.wasAcknowledged() ? "Successfully saved the rank: " + rank.getDisplayName() : "Failed to save the rank: " + rank.getDisplayName());
+        coffee.getLoggerPopulator().printLog(updateResult.wasAcknowledged() ?
+                "Successfully saved the rank: " + rank.getDisplayName() :
+                "Failed to save the rank: " + rank.getDisplayName());
     }
 
     /**
@@ -172,7 +174,9 @@ public class RankHandler {
 
         DeleteResult deleteResult = this.rankCollection.deleteOne(Filters.eq("uuid", rank.getUuid().toString()));
         this.getRanks().remove(rank);
-        coffee.getLoggerPopulator().printLog(deleteResult.wasAcknowledged() ? "Successfully deleted the rank: " + rank.getDisplayName() : "Failed to delete the rank: " + rank.getDisplayName());
+        coffee.getLoggerPopulator().printLog(deleteResult.wasAcknowledged() ?
+                "Successfully deleted the rank: " + rank.getDisplayName() :
+                "Failed to delete the rank: " + rank.getDisplayName());
     }
 
     /**

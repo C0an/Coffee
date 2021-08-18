@@ -28,7 +28,7 @@ public abstract class ProfileHandler {
     private final Coffee coffee;
     private final MongoCollection<Document> profileCollection;
     private final Map<UUID, Object> profiles = new HashMap<>();
-    private Class<?> profileClass;
+    private final Class<?> profileClass;
 
     public ProfileHandler(Coffee coffee, MongoCollection<Document> profileCollection, Class<?> profileClass) {
         this.coffee = coffee;
@@ -133,7 +133,9 @@ public abstract class ProfileHandler {
 
         Document document = Document.parse(coffee.getGson().toJson(profile));
         UpdateResult updateResult = this.profileCollection.replaceOne(Filters.eq("uuid", profile.getUuid().toString()), document, new ReplaceOptions().upsert(true));
-        coffee.getLoggerPopulator().printLog(updateResult.wasAcknowledged() ? "Successfully saved the profile of: " + profile.getUsername() : "Failed to save the profile of: " + profile.getUsername());
+        coffee.getLoggerPopulator().printLog(updateResult.wasAcknowledged() ?
+                "Successfully saved the profile of: " + profile.getUsername() :
+                "Failed to save the profile of: " + profile.getUsername());
         callback.accept(updateResult.wasAcknowledged());
     }
 
@@ -150,7 +152,9 @@ public abstract class ProfileHandler {
             return;
         }
         DeleteResult deleteResult = profileCollection.deleteOne(Filters.eq("uuid", uuid.toString()));
-        coffee.getLoggerPopulator().printLog(deleteResult.wasAcknowledged() ? "Successfully deleted the profile of: " + uuid : "Failed to delete the profile of: " + uuid);
+        coffee.getLoggerPopulator().printLog(deleteResult.wasAcknowledged() ?
+                "Successfully deleted the profile of: " + uuid :
+                "Failed to delete the profile of: " + uuid);
         callback.accept(deleteResult.wasAcknowledged());
     }
 

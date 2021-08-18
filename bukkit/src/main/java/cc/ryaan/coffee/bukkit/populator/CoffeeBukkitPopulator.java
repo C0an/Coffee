@@ -30,7 +30,8 @@ public class CoffeeBukkitPopulator extends CoffeePopulator {
                 .setHost(CoffeeBukkitPlugin.getInstance().getConfig().getString("redis.host", "127.0.0.1"))
                 .setPort(CoffeeBukkitPlugin.getInstance().getConfig().getInt("redis.port", 6379))
                 .setDbID(CoffeeBukkitPlugin.getInstance().getConfig().getInt("redis.database", 0))
-                .setAuthorization(CoffeeBukkitPlugin.getInstance().getConfig().getBoolean("redis.auth.enabled", false)).setTimeout(CoffeeBukkitPlugin.getInstance().getConfig().getInt("redis.timeout", 3000));
+                .setAuthorization(CoffeeBukkitPlugin.getInstance().getConfig().getBoolean("redis.auth.enabled", false))
+                .setTimeout(CoffeeBukkitPlugin.getInstance().getConfig().getInt("redis.timeout", 3000));
 
         String password = CoffeeBukkitPlugin.getInstance().getConfig().getString("redis.password", "");
         if(password != null && !password.isEmpty()) jedisBuilder.setPassword(password);

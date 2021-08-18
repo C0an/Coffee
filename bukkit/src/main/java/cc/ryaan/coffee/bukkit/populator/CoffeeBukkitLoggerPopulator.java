@@ -18,7 +18,10 @@ public class CoffeeBukkitLoggerPopulator extends LoggerPopulator {
     public void printLog(String logMessage) {
         String message = ChatColor.translateAlternateColorCodes('&', logMessage);
         CoffeeBukkitPlugin.getInstance().getLogger().info(message);
-        CoffeeMainCommand.getDebugUsers().stream().map(Bukkit::getPlayer).filter(Objects::nonNull).forEach(player -> player.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "[COFFEE] " + ChatColor.WHITE + message));
+        CoffeeMainCommand.getDebugUsers().stream()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .forEach(player -> player.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "[COFFEE] " + ChatColor.WHITE + message));
     }
 
 }

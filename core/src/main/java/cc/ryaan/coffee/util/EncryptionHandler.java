@@ -9,8 +9,9 @@ import java.nio.charset.StandardCharsets;
 
 public class EncryptionHandler {
 
-    private Cipher ecipher, dcipher;
-    private static String key = "akC@j@s9%94R&#Mz";
+    private final Cipher ecipher;
+    private final Cipher dcipher;
+    private static final String key = "akC@j@s9%94R&#Mz";
 
     public EncryptionHandler(SecretKey key) throws Exception {
         ecipher = Cipher.getInstance("AES");

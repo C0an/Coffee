@@ -25,13 +25,15 @@ public class ProfileBukkit extends Profile {
     public List<Grant> getActiveGrants() {
         List<Grant> active = new ArrayList<>();
 
-        if (getGrants() == null || getGrants().isEmpty()) // Fix console NPE
+        if (getGrants() == null || getGrants().isEmpty())
             return active;
 
-        getGrants().removeIf(grant -> grant.getRank() == null || getRankFromGrant(grant) == null || CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRank(getRankFromGrant(grant).getUuid()) == null);
+        getGrants().removeIf(grant ->
+                grant.getRank() == null ||
+                getRankFromGrant(grant) == null ||
+                        CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRank(getRankFromGrant(grant).getUuid()) == null);
 
         for (Grant grant : getGrants()) {
-
             if(grant.isStillActive() && isGrantActiveOnScope(grant)) {
                 active.add(grant);
             }
@@ -72,13 +74,13 @@ public class ProfileBukkit extends Profile {
 
     @Override
     public void applyGrant(Grant grant, UUID executor, boolean shouldGetCurrentGrant) {
-        if (getGrants() == null) return; // Fix console NPE
+        if (getGrants() == null) return;
 
         getGrants().add(grant);
-        if (shouldGetCurrentGrant && getCurrentGrant().getUuid().toString().equalsIgnoreCase(grant.getUuid().toString())) {
-            refreshCurrentGrant();
-        }
-        CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getLoggerPopulator().printLog("Successfully applied " + getUsername() + "'s Grant of the " + getRankFromGrant(grant).getName() + " Rank");
+        if (shouldGetCurrentGrant && getCurrentGrant().getUuid().toString().equalsIgnoreCase(grant.getUuid().toString())) refreshCurrentGrant();
+
+        CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getLoggerPopulator()
+                .printLog("Successfully applied " + getUsername() + "'s Grant of the " + getRankFromGrant(grant).getName() + " Rank");
     }
 
     @Override

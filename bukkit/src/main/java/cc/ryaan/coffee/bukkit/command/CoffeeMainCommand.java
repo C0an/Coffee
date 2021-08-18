@@ -19,7 +19,7 @@ public class CoffeeMainCommand {
         if(toggledDebug) debugUsers.add(player.getUniqueId());
         else debugUsers.remove(player.getUniqueId());
 
-        player.sendMessage(ChatColor.YELLOW + "You are now " + (toggledDebug ? "" : "no longer") + " in debug mode!");
+        player.sendMessage(ChatColor.YELLOW + "You are now" + (toggledDebug ? "" : " no longer") + " in debug mode!");
     }
 
 }

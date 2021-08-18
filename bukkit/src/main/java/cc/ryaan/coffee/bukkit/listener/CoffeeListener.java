@@ -25,10 +25,12 @@ public class CoffeeListener implements Listener {
         String loggedInIP = EncryptionHandler.encryptUsingKey(event.getAddress().getHostAddress());
         AtomicReference<ProfileBukkit> atomicReference = new AtomicReference<>();
 
-        CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getProfileHandler().loadProfile(uuid.toString(), profileFound -> atomicReference.set((ProfileBukkit) profileFound), false, LoadType.UUID);
+        CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getProfileHandler()
+                .loadProfile(uuid.toString(), profileFound -> atomicReference.set((ProfileBukkit) profileFound), false, LoadType.UUID);
 
         ProfileBukkit profile = atomicReference.get();
-        if(profile == null) (profile = new ProfileBukkit(uuid, event.getName())).applyGrant(CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getDefaultGrant(), null, false);
+        if(profile == null) (profile = new ProfileBukkit(uuid, event.getName()))
+                .applyGrant(CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getDefaultGrant(), null, false);
 
         profile.setCurrentIPAddress(loggedInIP);
         profile.getPreviousIPAddresses().add(loggedInIP);

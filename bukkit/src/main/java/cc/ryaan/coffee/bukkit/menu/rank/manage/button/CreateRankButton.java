@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CreateRankButton extends Button {
 
-    private Player executor;
+    private final Player executor;
 
     private final ConversationFactory factory = new ConversationFactory(CoffeeBukkitPlugin.getInstance());
 
