@@ -60,9 +60,7 @@ public class RankHandler {
                 coffee.getLoggerPopulator().printLog("Successfully imported " + ranks.size() + " ranks from the database.");
 
                 if (getDefaultRank() == null) {
-                    Rank defaultRank = new Rank("Default");
-                    defaultRank.setDefaultRank(true);
-                    defaultRank.setHidden(false);
+                    Rank defaultRank = Rank.builder("Default").defaultRank(true).hidden(false).build();
                     saveRank(defaultRank, false);
                     ranks.add(defaultRank);
                     coffee.getLoggerPopulator().printLog("No default rank was found, it has been created.");
@@ -220,4 +218,14 @@ public class RankHandler {
         return this.ranks.stream().filter(rank -> rank.getName().equalsIgnoreCase(string) || rank.getDisplayName().equalsIgnoreCase(string)).findAny().orElse(null);
     }
 
+    /**
+     * Setup a {@link Rank}.
+     *
+     * @param rank the {@link Rank} to setup.
+     * @param async the {@link Boolean} that defines whether to load on a new thread.
+     */
+    public void setupRank(Rank rank, boolean async) {
+        this.ranks.add(rank);
+        saveRank(rank, true);
+    }
 }

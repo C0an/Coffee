@@ -1,5 +1,6 @@
 package cc.ryaan.coffee.bukkit.command;
 
+import cc.ryaan.coffee.bukkit.util.ColourUtil;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,7 +20,8 @@ public class CoffeeMainCommand {
         if(toggledDebug) debugUsers.add(player.getUniqueId());
         else debugUsers.remove(player.getUniqueId());
 
-        player.sendMessage(ChatColor.YELLOW + "You are now" + (toggledDebug ? "" : " no longer") + " in debug mode!");
+        if(toggledDebug) player.sendMessage(ColourUtil.getLangMessage("command.coffee.debug.enabled"));
+        else player.sendMessage(ColourUtil.getLangMessage("command.coffee.debug.disabled"));
     }
 
 }

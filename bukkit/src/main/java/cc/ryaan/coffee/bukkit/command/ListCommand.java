@@ -2,6 +2,7 @@ package cc.ryaan.coffee.bukkit.command;
 
 import cc.ryaan.coffee.bukkit.CoffeeBukkitPlugin;
 import cc.ryaan.coffee.bukkit.profile.ProfileBukkit;
+import cc.ryaan.coffee.bukkit.util.ColourUtil;
 import cc.ryaan.coffee.rank.Rank;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,8 +40,10 @@ public class ListCommand {
             part.sort(String.CASE_INSENSITIVE_ORDER);
             merged.addAll(part);
         }
-        sender.sendMessage(getHeader(sender));
-        sender.sendMessage("(" +online + "/" + Bukkit.getMaxPlayers() + ") " + merged);
+
+        for (String s : ColourUtil.getLangListMessage("command.list")) {
+            sender.sendMessage(s.replace("%ranklist%", getHeader(sender).replace("%online%", String.valueOf(online)).replace("%maximum%", String.valueOf(Bukkit.getMaxPlayers())).replace("%players%", String.valueOf(merged))));
+        }
     }
 
     private static String getHeader(CommandSender sender) {

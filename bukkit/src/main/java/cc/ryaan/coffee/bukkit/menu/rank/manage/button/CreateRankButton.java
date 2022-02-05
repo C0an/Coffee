@@ -70,11 +70,13 @@ public class CreateRankButton extends Button {
             String colour = (String) context.getSessionData( "colour" );
             String prefix = (String) context.getSessionData( "prefix" );
 
-            Rank rank = new Rank(name);
-            rank.setDisplayName(displayName);
-            rank.setPriority(Integer.parseInt(priority));
-            rank.setColour(colour);
-            rank.setPrefix(prefix);
+            Rank rank = Rank.builder(name)
+                    .displayName(displayName)
+                    .priority(Integer.parseInt(priority))
+                    .colour(colour)
+                    .prefix(prefix)
+                    .colour(colour)
+                    .build();
 
             CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
             CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRanks().add(rank);

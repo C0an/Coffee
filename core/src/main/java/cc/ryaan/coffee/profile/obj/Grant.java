@@ -65,10 +65,9 @@ public class Grant {
     }
 
     public String formatGrantedTime(long time) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mmaa");
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
-        return dateFormat.format(cal.getTime()) + " (" + TimeUtil.getTimeZoneShortName(cal.getTimeZone().getDisplayName()) + ")";
+        return new SimpleDateFormat("dd/MM/yy HH:mmaa").format(cal.getTime()) + " (" + TimeUtil.getTimeZoneShortName(cal.getTimeZone().getDisplayName()) + ")";
     }
 
     public long getActiveUntil() {

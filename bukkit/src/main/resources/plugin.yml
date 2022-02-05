@@ -1,6 +1,6 @@
 name: Coffee
 main: cc.ryaan.coffee.bukkit.CoffeeBukkitPlugin
-version: 0.1-SNAPSHOT
+version: ${git.commit.id.abbrev}
 author: C0an
 depend:
   - qLib

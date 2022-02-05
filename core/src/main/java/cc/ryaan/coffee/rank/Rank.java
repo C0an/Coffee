@@ -14,26 +14,31 @@ import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor @Data
+@Builder(builderMethodName = "internalBuilder")
 public class Rank {
 
     private UUID uuid;
-    private String name, displayName, colour = "§a", prefix = "§a", suffix = "§a";
-    private int priority = 0;
-    private boolean defaultRank, staff, hidden;
+    private String name, displayName;
+    @Builder.Default private String colour = "§a", prefix = "§a", suffix = "§a";
+    @Builder.Default private int priority = 0;
+    @Builder.Default private boolean defaultRank = false, staff = false, hidden = true;
     // Here we do a Class as we have ServerGroup and Server[String] specific permissions.
-    private Map<Object, String> permissions = new HashMap<>();
+    @Builder.Default private Map<Object, String> permissions = new HashMap<>();
+    @Builder.Default private Map<String, String> metadata = new HashMap<>();
 
+    @Builder
     public Rank(String name) {
         this.uuid = UUID.randomUUID();
         this.name = name;
         this.displayName = name;
-        this.defaultRank = false;
-        this.hidden = true;
-        this.staff = false;
     }
 
     public String getColouredName() {
         return getColour() + getDisplayName();
+    }
+
+    public static RankBuilder builder(String name) {
+        return internalBuilder().uuid(UUID.randomUUID()).name(name).displayName(name);
     }
 
 }

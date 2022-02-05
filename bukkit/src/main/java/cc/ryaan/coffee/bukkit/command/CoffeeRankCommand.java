@@ -4,6 +4,7 @@ import cc.ryaan.coffee.bukkit.CoffeeBukkitPlugin;
 import cc.ryaan.coffee.bukkit.command.parameter.RankParameter;
 import cc.ryaan.coffee.bukkit.menu.rank.edit.RankEditMenu;
 import cc.ryaan.coffee.bukkit.menu.rank.manage.RankManagementMenu;
+import cc.ryaan.coffee.bukkit.util.ColourUtil;
 import cc.ryaan.coffee.rank.Rank;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -24,35 +25,26 @@ public class CoffeeRankCommand {
             }
             return;
         }
-        sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "Coffee Rank");
-        sender.sendMessage("");
-        sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.YELLOW + "coffee rank create" + ChatColor.GRAY + ": " + ChatColor.WHITE + "Create a new rank");
-        sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.YELLOW + "coffee rank delete" + ChatColor.GRAY + ": " + ChatColor.WHITE + "Delete an existing rank");
-        sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.YELLOW + "coffee rank rename" + ChatColor.GRAY + ": " + ChatColor.WHITE + "Rename a rank");
-        sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.YELLOW + "coffee rank setdisplayname" + ChatColor.GRAY + ": " + ChatColor.WHITE + "Set a rank display name");
-        sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.YELLOW + "coffee rank setprefix" + ChatColor.GRAY + ": " + ChatColor.WHITE + "Set a rank prefix");
-        sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.YELLOW + "coffee rank setsuffix" + ChatColor.GRAY + ": " + ChatColor.WHITE + "Set a rank suffix");
-        sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.YELLOW + "coffee rank setcolour" + ChatColor.GRAY + ": " + ChatColor.WHITE + "Set a rank colour");
-        sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.YELLOW + "coffee rank setpriority" + ChatColor.GRAY + ": " + ChatColor.WHITE + "Set a ranks priority");
-        sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.YELLOW + "coffee rank setstaff" + ChatColor.GRAY + ": " + ChatColor.WHITE + "Set a ranks staff status");
-        sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.YELLOW + "coffee rank sethidden" + ChatColor.GRAY + ": " + ChatColor.WHITE + "Set a ranks hidden status");
+
+        ColourUtil.sendLangListMessage(sender, "command.coffee.rank.help");
     }
 
     @Command(names = {"coffee rank create"}, permission = "coffee.admin")
     public static void permsRankCreateCmd(CommandSender sender, @Param(name = "rank") String name) {
-        Rank r = CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRank(name);
-        if(r != null) {
-            sender.sendMessage(ChatColor.RED + "There is already a rank with the name \"" + r.getColouredName() + "\".");
+        Rank rank = CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRank(name);
+        if(rank != null) {
+            sender.sendMessage(ColourUtil.getLangMessage("error.rank.already_exists").replace("%rank%", rank.getColouredName()));
             return;
         }
-        r = new Rank(name);
-        sender.sendMessage(ChatColor.GREEN + "Successfully created the rank " + r.getColouredName() + ChatColor.GREEN + "!");
+        rank = new Rank(name);
+        CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().setupRank(rank, true);
+        sender.sendMessage(ColourUtil.getLangMessage("command.coffee.rank.create.successfully_created").replace("%rank%", rank.getColouredName()));
     }
 
     @Command(names = {"coffee rank delete"}, permission = "coffee.admin")
     public static void permsRankDeleteCmd(CommandSender sender, @Param(name = "rank") Rank rank) {
         CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().deleteRank(rank, true);
-        sender.sendMessage(ChatColor.GREEN + "Successfully deleted the rank " + rank.getColouredName() + ChatColor.GREEN + "!");
+        sender.sendMessage(ColourUtil.getLangMessage("command.coffee.rank.delete.successfully_deleted").replace("%rank%", rank.getColouredName()));
     }
 
     @Command(names = {"coffee rank rename"}, permission = "coffee.admin")
@@ -60,14 +52,14 @@ public class CoffeeRankCommand {
         String original = rank.getName();
         rank.setName(name);
         CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
-        sender.sendMessage(ChatColor.GREEN + "Successfully renamed the rank from " + rank.getColour() + original + ChatColor.GREEN + " to " + rank.getColour() + name + ChatColor.GREEN + "!");
+        sender.sendMessage(ColourUtil.getLangMessage("command.coffee.rank.rename.successfully_rename").replace("%colour%", rank.getColour()).replace("%oldname%", original).replace("%newname%", name));
     }
 
     @Command(names = {"coffee rank setdisplayname"}, permission = "coffee.admin")
     public static void permsRankSetDisplayNameCmd(CommandSender sender, @Param(name = "rank") Rank rank, @Param(name = "displayName", wildcard = true) String displayName) {
         rank.setDisplayName(displayName);
         CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
-        sender.sendMessage(ChatColor.GREEN + "Successfully changed the display name to " + rank.getColouredName() + "!");
+        sender.sendMessage(ColourUtil.getLangMessage("command.coffee.rank.setdisplayname.successfully_changed").replace("%rank%", rank.getColouredName()));
     }
 
     @Command(names = {"coffee rank setprefix"}, permission = "coffee.admin")
@@ -75,7 +67,7 @@ public class CoffeeRankCommand {
         String prefix = ChatColor.translateAlternateColorCodes('&', prefixString);
         rank.setPrefix(prefix);
         CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
-        sender.sendMessage(ChatColor.GREEN + "Successfully changed the prefix to " + prefix + ChatColor.GREEN + "!");
+        sender.sendMessage(ColourUtil.getLangMessage("command.coffee.rank.setprefix.successfully_changed").replace("%prefix%", prefix));
     }
 
     @Command(names = {"coffee rank setsuffix"}, permission = "coffee.admin")
@@ -83,7 +75,7 @@ public class CoffeeRankCommand {
         String suffix = ChatColor.translateAlternateColorCodes('&', suffixString);
         rank.setSuffix(suffix);
         CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
-        sender.sendMessage(ChatColor.GREEN + "Successfully changed the suffix to " + suffixString + ChatColor.GREEN + "!");
+        sender.sendMessage(ColourUtil.getLangMessage("command.coffee.rank.setsuffix.successfully_changed").replace("%suffix%", suffix));
     }
 
     @Command(names = {"coffee rank setcolour"}, permission = "coffee.admin")
@@ -91,28 +83,28 @@ public class CoffeeRankCommand {
         String colour = ChatColor.translateAlternateColorCodes('&', colourString);
         rank.setColour(colour);
         CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
-        sender.sendMessage(ChatColor.GREEN + "Successfully changed the color to " + rank.getColouredName() + ChatColor.GREEN + "!");
+        sender.sendMessage(ColourUtil.getLangMessage("command.coffee.rank.setcolour.successfully_changed").replace("%name%", rank.getColouredName()));
     }
 
     @Command(names = {"coffee rank setpriority"}, permission = "coffee.admin")
     public static void permsRankSetPriorityCmd(CommandSender sender, @Param(name = "rank") Rank rank, @Param(name = "priority") int priority) {
         rank.setPriority(priority);
         CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
-        sender.sendMessage(ChatColor.GREEN + "Successfully changed the priority to " + ChatColor.BLUE + priority + ChatColor.GREEN + "!");
+        sender.sendMessage(ColourUtil.getLangMessage("command.coffee.rank.setpriority.successfully_changed").replace("%priority%", String.valueOf(priority)));
     }
 
     @Command(names = {"coffee rank setstaff"}, permission = "coffee.admin")
     public static void permsRankSetStaffCmd(CommandSender sender, @Param(name = "rank") Rank rank, @Param(name = "staff") boolean staff) {
         rank.setStaff(staff);
         CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
-        sender.sendMessage(ChatColor.GREEN + "Successfully changed the staff status to " + ChatColor.BLUE + staff + ChatColor.GREEN + "!");
+        sender.sendMessage(ColourUtil.getLangMessage("command.coffee.rank.setstaff.successfully_changed").replace("%status%", String.valueOf(staff)));
     }
 
     @Command(names = {"coffee rank sethidden"}, permission = "coffee.admin")
     public static void permsRankSetHiddenCmd(CommandSender sender, @Param(name = "rank") Rank rank, @Param(name = "hidden") boolean hidden) {
         rank.setHidden(hidden);
         CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().saveRank(rank, true);
-        sender.sendMessage(ChatColor.GREEN + "Successfully changed the hidden status to " + ChatColor.BLUE + hidden + ChatColor.GREEN + "!");
+        sender.sendMessage(ColourUtil.getLangMessage("command.coffee.rank.sethidden.successfully_changed").replace("%status%", String.valueOf(hidden)));
     }
 
 

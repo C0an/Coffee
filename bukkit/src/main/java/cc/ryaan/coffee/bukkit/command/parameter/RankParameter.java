@@ -1,6 +1,7 @@
 package cc.ryaan.coffee.bukkit.command.parameter;
 
 import cc.ryaan.coffee.bukkit.CoffeeBukkitPlugin;
+import cc.ryaan.coffee.bukkit.util.ColourUtil;
 import cc.ryaan.coffee.rank.Rank;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -18,7 +19,7 @@ public class RankParameter implements ParameterType<Rank> {
     @Override
     public Rank transform(CommandSender commandSender, String s) {
         Rank rank = CoffeeBukkitPlugin.getInstance().getCoffeeBukkit().getRankHandler().getRank(s);
-        if(rank == null) commandSender.sendMessage(ChatColor.RED + "No such rank found by the name of \"" + s + "\".");
+        if(rank == null) commandSender.sendMessage(ColourUtil.getLangMessage("error.rank.no_such_rank").replace("%input%", s));
         return rank;
     }
 

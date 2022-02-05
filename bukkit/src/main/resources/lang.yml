@@ -1,0 +1,38 @@
+error:
+  rank:
+    no_such_rank: "&cThere is no such rank by the name or uuid of \"%input%\"."
+    already_exists: "&cThere is already a rank with the name \"%rank%\"."
+
+command:
+  coffee:
+    debug:
+      enabled: "&eYou are now in debug mode!"
+      disabled: "&cYou are no longer in debug mode!"
+    rank:
+      help:
+        - "&6&lCoffee Help"
+        - ""
+        - "&c&oTo be written up, idk lol."
+      create:
+        successfully_created: "&aSuccessfully created the rank %rank%&a!"
+      delete:
+        successfully_deleted: "&aSuccessfully deleted the rank %rank%&a!"
+      rename:
+        successfully_renamed: "&aSuccessfully renamed the rank from %colour%%oldname%&ato %colour%%newname%&a!"
+      setdisplayname:
+        successfully_changed: "&aSuccessfully changed the display name to %name%&a."
+      setprefix:
+        successfully_changed: "&aSuccessfully changed the prefix to %prefix%&a."
+      setsuffix:
+        successfully_changed: "&aSuccessfully changed the suffix to %suffix%&a."
+      setcolour:
+        successfully_changed: "&aSuccessfully changed the colour to %name%&a."
+      setpriority:
+        successfully_changed: "&aSuccessfully changed the priority to %priority%&a."
+      setstaff:
+        successfully_changed: "&aSuccessfully changed the staff status to %status%&a."
+      sethidden:
+        successfully_changed: "&aSuccessfully changed the hidden status to %status%&a."
+  list:
+    - "%ranklist%"
+    - "(%online%/%maximum%) %players%"
